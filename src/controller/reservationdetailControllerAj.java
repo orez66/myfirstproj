@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import da.reservationdetailDA;
 import model.reservationdetail;
+import model.zimmer;
 
 
 /**
@@ -78,7 +79,52 @@ public class reservationdetailControllerAj extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		doGet(request, response);
-	}
+		String action_type = request.getParameter("action_type");
+		reservationdetail reservationdetail = new reservationdetail();
+		String forward = "";
+		request.setCharacterEncoding("UTF-8"); 
+		
+		int idZimmer = Integer.valueOf(request.getParameter("idzimmer"));
+		int numberguests = Integer.valueOf(request.getParameter("numguests"));
+		int babies = Integer.valueOf(request.getParameter("baby"));
+		String note = request.getParameter("notes");
+		String start = request.getParameter("startdate");
+		String end = request.getParameter("enddate");	
+		
+		reservationdetail.setZimmer_id(idZimmer);
+		reservationdetail.setNum_of_guests(numberguests);
+		reservationdetail.setBaby(babies);
+		reservationdetail.setNotes(note);
+		reservationdetail.setStart_date(start);
+		reservationdetail.setEnd_date(end);
+		
+		String idresdet = request.getParameter("id");
+		
+		if(idresdet == null||idresdet.isEmpty()){
+			}
 
-}
+		else{
+			reservationdetail.setReservation_detail_id(Integer.valueOf(idresdet));
+
+		if(action_type.equals("update")){
+			myReservatindetailDA.updateReservationdetail(reservationdetail);
+		}
+
+		else{
+			myReservatindetailDA.addReservationdetail(reservationdetail);
+						}
+						
+					}
+
+					List <reservationdetail> list = myReservatindetailDA.getAllReservationdetail();
+					request.setAttribute("reservatindetail", list);
+					
+					RequestDispatcher dispatcher = request.getRequestDispatcher(List_reservationdetail);
+					response.setCharacterEncoding("UTF-8");
+					dispatcher.forward(request, response);
+
+					
+
+			}
+
+		}
